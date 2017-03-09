@@ -157,6 +157,9 @@
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JTextField" name="bil1">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bil1ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="bil2">
             </Component>

@@ -52,6 +52,12 @@ public class kalkulator extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createCompoundBorder(null, javax.swing.BorderFactory.createEtchedBorder()));
 
+        bil1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bil1ActionPerformed(evt);
+            }
+        });
+
         jLabel1.setFont(new java.awt.Font("Humanst521 BT", 0, 18)); // NOI18N
         jLabel1.setText("BILANGAN 1   :");
 
@@ -218,6 +224,10 @@ public class kalkulator extends javax.swing.JFrame {
     private void keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarActionPerformed
          System.exit(0);
     }//GEN-LAST:event_keluarActionPerformed
+
+    private void bil1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bil1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bil1ActionPerformed
 
     /**
      * @param args the command line arguments
