@@ -13,8 +13,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class FormDataBuku extends javax.swing.JFrame {
 
-        private DefaultTableModel model;
-        private Connection con =koneksi.getConnection();
+        private DefaultTableModel model; //mendeklarasikan tabel dengan nama model
+        private Connection con =koneksi.getConnection(); // membuat koneksi dari method getconnection
         private Statement stt;
         private ResultSet rss;
         private int baris;
@@ -26,39 +26,39 @@ public class FormDataBuku extends javax.swing.JFrame {
         initComponents();
     }
      private void InitTable(){
-       model =new DefaultTableModel();
+       model =new DefaultTableModel();  //mendefinisikan isi record tabel model
        model.addColumn("ID");
        model.addColumn("JUDUL");
        model.addColumn("Penulis");
        model.addColumn("HARGA");
        
-       jTable1.setModel(model);
+       jTable1.setModel(model); //memasukan data model ke jtable1
        }
 private void TampilData()
 {
     try{
         String sql ="SELECT * FROM buku";
-                stt =con.createStatement();
-                rss =stt.executeQuery(sql);
-                while(rss.next())
+                stt =con.createStatement(); //membuat statment dari koneksi
+                rss =stt.executeQuery(sql); //mengesekusi queri dan dengan mengecek koneksinya
+                
+                while(rss.next()) //fetching isi dari rss (hasil dari esekusi sql) kedalam model tabel 
                 {
-                Object[] o = new Object[4];
+                Object[] o = new Object[4];    
                 o[0]=rss.getString("id");
                 o[1]=rss.getString("judul");
                 o[2]=rss.getString("penulis");
                 o[3]=rss.getString("harga");
-               
-                model.addRow(o);
+                model.addRow(o); //memasukan isi array ke model
                 }      
         }catch(SQLException e){
                 System.out.println(e.getMessage());
             }
 }
-private void TambahData(String judul,String penulis ,String harga){
+private void TambahData(String judul,String penulis ,String harga){         //method tambah data
     try{
-        String sql="insert into buku values (NULL,'"+judul+"','"+penulis+"',"+harga+")";
+        String sql="insert into buku values (NULL,'"+judul+"','"+penulis+"',"+harga+")"; //penulisan query
     stt=con.createStatement();
-    stt.executeUpdate(sql);
+    stt.executeUpdate(sql);  //esekusi query
     //model.addRow(new Object[]{judul,penulis,harga});    
     }
     catch(SQLException e){
@@ -66,13 +66,13 @@ private void TambahData(String judul,String penulis ,String harga){
     }
     
 }
-private void HapusData(String id, int baris)
+private void HapusData(String id, int baris) //methon hapus data
     {
         try{
-        String sqldelete="delete from buku where id='"+id+"'";
+        String sqldelete="delete from buku where id='"+id+"'"; //penulisan query penghapusan data berdasar id
         stt= con.createStatement();
-        stt.executeUpdate(sqldelete);
-        model.removeRow(baris);
+        stt.executeUpdate(sqldelete); //esekusi query delete
+        model.removeRow(baris);     //mengilangkan baris pada model dengan parameter baris
         }
         catch (SQLException e)
         {
@@ -87,7 +87,7 @@ private void UbahData(String judul,String penulis, String harga, String id){
                          + "judul='"+judul+"',"
                          + "penulis='"+penulis+"',"
                          + "harga='"+harga+"'"
-                         + "WHERE id='"+id+"'";
+                         + "WHERE id='"+id+"'"; //query update data berdasar id
             stt = con.createStatement();
             stt.executeUpdate(sql);
             
@@ -98,39 +98,40 @@ private void UbahData(String judul,String penulis, String harga, String id){
 
 private void cari(){
         try {
-            String sql = "SELECT * FROM buku where judul='"+caritxt.getText()+"'|| penulis='"+caritxt.getText()+"'|| harga='"+caritxt.getText()+"'";
-            stt = con.createStatement();
-            rss = stt.executeQuery(sql);
+            String sql = "SELECT * FROM buku where judul='"+caritxt.getText()+"'|| penulis='"+caritxt.getText()+"'|| harga='"+caritxt.getText()+"'"; //pencarian data berdasar judul||penulis||harga
+            stt = con.createStatement(); //koneksi
+            rss = stt.executeQuery(sql);    //esekusi query
+            
             while(rss.next()){
                 Object[] o = new Object[4];
                 o[0] = rss.getInt("id");
                 o[1] = rss.getString("judul");
                 o[2] = rss.getString("penulis");
                 o[3] = rss.getString("harga");
-                model.addRow(o);
+                model.addRow(o); //mengisi ke model
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-private void validasi (String judul, String penulis, String harga){
+private void validasi (String judul, String penulis, String harga){ //membuatfungsi validasi
         try {
-            String sql = "SELECT * FROM buku";
-            stt = con.createStatement();
-            rss = stt.executeQuery(sql);
-            while(rss.next()){
+            String sql = "SELECT * FROM buku"; //mengeluarkan isi tabele buku 
+            stt = con.createStatement(); 
+            rss = stt.executeQuery(sql); //esekusi query
+            while(rss.next()){ //mengeluarkan seluruh data
                 Object[] o = new Object[2];
-                o[0] = rss.getString("judul").toLowerCase();
-                o[1] = rss.getString("penulis").toLowerCase();
+                o[0] = rss.getString("judul").toLowerCase(); //masukan ke array dan rubah ke huruf kecil
+                o[1] = rss.getString("penulis").toLowerCase(); //idem
                 
-                if( o[0].equals(judul.toLowerCase()) && o[1].equals(penulis.toLowerCase())){
+                if( o[0].equals(judul.toLowerCase()) && o[1].equals(penulis.toLowerCase())){ //cocokan data buku dengan parameter in validasi
                     JOptionPane.showMessageDialog(null,"Data telah ada");
-                    cekbuku=false;
+                    cekbuku=false; //set cek buku=false
                     break;
                 }
             }
             if(cekbuku==true){
-                TambahData(judul, penulis, harga);
+                TambahData(judul, penulis, harga); //jika buku tidak sama(cekbuku=true) tambahkan data 
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -189,7 +190,7 @@ private void validasi (String judul, String penulis, String harga){
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(147, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addGap(145, 145, 145))
         );
@@ -385,19 +386,19 @@ private void validasi (String judul, String penulis, String harga){
     }//GEN-LAST:event_formComponentShown
 
     private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
-          if(judul1.getText().equals("") && harga1.getText().equals(""))
+          if(judul1.getText().equals("") && harga1.getText().equals("")) //kondisi untuk mengecek inputan text field kosong atau tidak
      {
            JOptionPane.showMessageDialog(null, "Data Belum Lengkap","Warning !!!!",JOptionPane.INFORMATION_MESSAGE);
-           judul1.requestFocus();
+           judul1.requestFocus(); //program akan request ke judul1
      } else{
-        String judul = judul1.getText();
+        String judul = judul1.getText(); 
         String penulis = penulis1.getSelectedItem().toString();
         String harga = harga1.getText();
         
-        validasi(judul, penulis, harga);
+        validasi(judul, penulis, harga); ///jalankan method validasi
         
-        InitTable();
-        TampilData();
+        InitTable(); //init jTable
+        TampilData(); //tampilkan data
      }
     }//GEN-LAST:event_simpanActionPerformed
 
@@ -406,30 +407,29 @@ private void validasi (String judul, String penulis, String harga){
     }//GEN-LAST:event_keluarActionPerformed
 
     private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
-        String id = jTable1.getValueAt(baris, 0 ).toString();
-        HapusData(id, baris);
+        String id = jTable1.getValueAt(baris, 0 ).toString(); //hapus isi kolom berdasar baris yg dipilih pada jTable1
+        HapusData(id, baris); //jalankan method hapusdata
     }//GEN-LAST:event_hapusActionPerformed
 
     private void ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahActionPerformed
         try {
         int baris = jTable1.getSelectedRow();
         
+        jTable1.setValueAt(judul1.getText(),baris,1);  // men set isi record pada tabel 
+        jTable1.setValueAt(penulis1.getSelectedItem(),baris,2); //idem
+        jTable1.setValueAt(harga1.getText(),baris,3);   //idem
         
-        jTable1.setValueAt(judul1.getText(),baris,1);
-        jTable1.setValueAt(penulis1.getSelectedItem(),baris,2);
-        jTable1.setValueAt(harga1.getText(),baris,3); 
-        
-        String judul=jTable1.getValueAt(baris,1).toString();
-        String penulis=jTable1.getValueAt(baris,2).toString();
-        String harga=jTable1.getValueAt(baris,3).toString();
-        String id=jTable1.getValueAt(baris,0).toString();
+        String judul=jTable1.getValueAt(baris,1).toString(); //menset nilai ke dalam variabel yg akan dimasuka nsebagai parameter untuk method ubah data
+        String penulis=jTable1.getValueAt(baris,2).toString(); //idem
+        String harga=jTable1.getValueAt(baris,3).toString();    //idem
+        String id=jTable1.getValueAt(baris,0).toString();   //idem
         
         
-        judul1.setText(judul);
-        penulis1.setSelectedItem(penulis);
-        harga1.setText(harga);
+        judul1.setText(judul);   //men set isi jTextfield berdasar record yg terpilih dari baris pada tabel
+        penulis1.setSelectedItem(penulis); //idem
+        harga1.setText(harga);  //idem
         
-        UbahData(judul,penulis,harga,id);    
+        UbahData(judul,penulis,harga,id);  //pemanggilan method ubah data  
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,"Data tidak dipilih","Warning !!!!",JOptionPane.INFORMATION_MESSAGE);
         }
@@ -437,26 +437,26 @@ private void validasi (String judul, String penulis, String harga){
     }//GEN-LAST:event_ubahActionPerformed
 
     private void cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariActionPerformed
-        model.getDataVector().removeAllElements();
-        model.fireTableDataChanged();
-        cari();
-        tampil.setVisible(true);
+        model.getDataVector().removeAllElements(); //menghilangkan isi tabel ketika button cari di tekan
+        model.fireTableDataChanged();   //idem
+        cari(); //pemangggilan meton cari
+        tampil.setVisible(true); //menampilkan button tampil yg berfungsi menampilkan isi tabel.
     }//GEN-LAST:event_cariActionPerformed
 
     private void tampilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tampilActionPerformed
-       InitTable();
-       TampilData();
-        tampil.setVisible(false);
-        caritxt.setText("");
+       InitTable(); //menampilka tabel1 dari nilai yg didapat dari model
+       TampilData(); //pemanggilan method tampildata
+        tampil.setVisible(false); //menghilangkan button tampil
+        caritxt.setText("");    //reseet textfield cari
     }//GEN-LAST:event_tampilActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        tampil.setVisible(false);
-        caritxt.setText("");
+        tampil.setVisible(false); //menghilangkan button tampil
+        caritxt.setText("");    //clear text textfield cari
     }//GEN-LAST:event_formWindowOpened
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-         int baris = jTable1.getSelectedRow();
+         int baris = jTable1.getSelectedRow();  //action untuk memilih baris pada table
         
         String judul=jTable1.getValueAt(baris,1).toString();
         String penulis=jTable1.getValueAt(baris,2).toString();
@@ -470,8 +470,8 @@ private void validasi (String judul, String penulis, String harga){
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void ulangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ulangActionPerformed
-         judul1.setText("");
-        harga1.setText("");
+         judul1.setText(""); //reset textfield
+        harga1.setText(""); //idem
     }//GEN-LAST:event_ulangActionPerformed
 
     /**
